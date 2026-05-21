@@ -1,6 +1,2 @@
 # VCT-CN-Data-analysis
-本项目对VCT CN选手及特工进行数据分析：
-eda.pdf:项目介绍，数据可视化总结
-project_code.py: 数据处理及可视化所用代码
-Testing：对代码测试
-本项目为作者Haiwen与Andrew联合开发
+This project performs data analysis on VCT CN players and agents, covering data processing, visualization, and statistical findings. project_code.py contains the core code for data handling and visualization, Testing.py is used for code testing, and report.pdf presents the full project report and findings.
