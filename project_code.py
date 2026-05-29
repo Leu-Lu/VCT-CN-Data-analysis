@@ -34,7 +34,7 @@ def calculate_player_acs() -> pd.DataFrame:
     DataFrame comprised of each player and their average combat score
     across all rounds played (ACS).
     """
-    data = pd.read_csv("player_agent.csv")
+    data = pd.read_csv("datasets/player_agent.csv")
 
     data['TotalCS'] = data['Rnd'] * data['ACS']
 
@@ -55,7 +55,7 @@ def calculate_agent_acs() -> pd.DataFrame:
     DataFrame comprised of each agent and the average combat score achieved
     across all rounds played on that agent by any player (ACS).
     """
-    data = pd.read_csv("player_agent.csv")
+    data = pd.read_csv("datasets/player_agent.csv")
 
     data['TotalCS'] = data['Rnd'] * data['ACS']
 
@@ -231,14 +231,14 @@ def main():
     various functions to make calculations and visualize various aspects
     of the data.
     """
-    data = pd.read_csv("player_agent.csv")
+    data = pd.read_csv("datasets/player_agent.csv")
     data['KAST%'] = data['KAST%'].str.replace('%', '').astype(float)
 
     teamcomps = pd.read_csv("Team comp wr.csv")
 
     print(acs_kast_seven_num_sum(data).round(2))
 
-    adata = pd.read_csv('agent_picks.csv')
+    adata = pd.read_csv('datasets/agent_picks.csv')
     adata['pick%'] = adata['pick%'].apply(lambda x: float(x[:-1]))
     adata['win%'] = adata['win%'].apply(lambda x: float(x[:-1]))
 
