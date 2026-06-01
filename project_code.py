@@ -100,7 +100,7 @@ def plot_players_acs(player_data: pd.DataFrame) -> None:
     plt.xlabel('ACS (Average Combat Score)')
     plt.ylabel('Player')
     plt.tight_layout()
-    plt.savefig('players_acs.png', bbox_inches='tight')
+    plt.savefig('graphs/players_acs.png', bbox_inches='tight')
 
 
 def plot_acs_by_agent(data: pd.DataFrame, agent_data: pd.DataFrame) -> None:
@@ -119,7 +119,7 @@ def plot_acs_by_agent(data: pd.DataFrame, agent_data: pd.DataFrame) -> None:
     sns.stripplot(data=data, x="Agent", y="ACS")
     plt.xticks(rotation=75)
     plt.title("ACS (Average Combat Score) vs. Agent Played")
-    plt.savefig('acs_by_agent.png', bbox_inches='tight')
+    plt.savefig('graphs/acs_by_agent.png', bbox_inches='tight')
 
 
 def plot_kast_by_agent(data: pd.DataFrame, agent_data: pd.DataFrame) -> None:
@@ -138,7 +138,7 @@ def plot_kast_by_agent(data: pd.DataFrame, agent_data: pd.DataFrame) -> None:
     sns.stripplot(data=data, x="Agent", y="KAST%")
     plt.xticks(rotation=75)
     plt.title("KAST% vs. Agent Played")
-    plt.savefig('kast_by_agent.png', bbox_inches='tight')
+    plt.savefig('graphs/kast_by_agent.png', bbox_inches='tight')
 
 
 def plot_team_comp_heatmap(teamcomps: pd.DataFrame) -> None:
@@ -154,7 +154,7 @@ def plot_team_comp_heatmap(teamcomps: pd.DataFrame) -> None:
     plt.xlabel("Loser")
     plt.xticks(rotation=45)
     plt.title("Team Composition Wins vs Losses")
-    plt.savefig('team_comp_heatmap.png', bbox_inches='tight')
+    plt.savefig('graphs/team_comp_heatmap.png', bbox_inches='tight')
 
 
 def plot_team_wins_vs_losses(comp_data: pd.DataFrame) -> None:
@@ -180,7 +180,7 @@ def plot_team_wins_vs_losses(comp_data: pd.DataFrame) -> None:
     )
     g.fig.suptitle("Team Wins vs Losses by Composition")
     g.fig.subplots_adjust(top=0.95)
-    plt.savefig('team_wins_vs_losses.png', bbox_inches='tight')
+    plt.savefig('graphs/team_wins_vs_losses.png', bbox_inches='tight')
 
 
 def plot_agent_pick_vs_win(adata: pd.DataFrame) -> None:
@@ -203,7 +203,7 @@ def plot_agent_pick_vs_win(adata: pd.DataFrame) -> None:
     plt.xlabel('pick rate')
     plt.ylabel('win rate')
     plt.title('Agent Pick% vs Win% (Overall)')
-    plt.savefig('agent_pick_vs_win.png', bbox_inches='tight')
+    plt.savefig('graphs/agent_pick_vs_win.png', bbox_inches='tight')
 
 
 def plot_agent_winrate_by_map(adata: pd.DataFrame) -> None:
@@ -223,7 +223,7 @@ def plot_agent_winrate_by_map(adata: pd.DataFrame) -> None:
         linewidths=0.5
     )
     plt.title("Agent Win% by Map")
-    plt.savefig('agent_winrate_by_map.png', bbox_inches='tight')
+    plt.savefig('graphs/agent_winrate_by_map.png', bbox_inches='tight')
 
 
 def main():
