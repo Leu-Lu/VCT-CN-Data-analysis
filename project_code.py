@@ -10,7 +10,8 @@ as well as constructing our data visualizations.
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-
+import ml_players
+import ml_agents
 
 def acs_kast_seven_num_sum(data: pd.DataFrame) -> pd.DataFrame:
     """
@@ -77,7 +78,7 @@ def calculate_comp_popularity_winrate() -> pd.DataFrame:
     DataFrame comprised of each team composition, their number of wins,
     the total number of games they were featured in, and their win-rate.
     """
-    teamcomps = pd.read_csv("Team comp wr.csv")
+    teamcomps = pd.read_csv("datasets/Team comp wr.csv")
     result = teamcomps[['Winner', 'Total Wins', 'Losses']].copy()
     result['Total Games'] = result['Total Wins'] + result['Losses']
     result['Win Rate'] = (result['Total Wins']/result['Total Games']).round(3)
@@ -199,8 +200,8 @@ def plot_agent_pick_vs_win(adata: pd.DataFrame) -> None:
             xytext=(8, 8), textcoords='offset points', fontsize=9,
         )
 
-    plt.xlabel = ('pick rate')
-    plt.ylabel = ('win rate')
+    plt.xlabel('pick rate')
+    plt.ylabel('win rate')
     plt.title('Agent Pick% vs Win% (Overall)')
     plt.savefig('agent_pick_vs_win.png', bbox_inches='tight')
 
@@ -231,13 +232,14 @@ def main():
     various functions to make calculations and visualize various aspects
     of the data.
     """
+    
     data = pd.read_csv("datasets/player_agent.csv")
     data['KAST%'] = data['KAST%'].str.replace('%', '').astype(float)
-
-    teamcomps = pd.read_csv("Team comp wr.csv")
-
+    
+    teamcomps = pd.read_csv("datasets/Team comp wr.csv")
+    
     print(acs_kast_seven_num_sum(data).round(2))
-
+    
     adata = pd.read_csv('datasets/agent_picks.csv')
     adata['pick%'] = adata['pick%'].apply(lambda x: float(x[:-1]))
     adata['win%'] = adata['win%'].apply(lambda x: float(x[:-1]))
@@ -254,6 +256,19 @@ def main():
     plot_team_wins_vs_losses(comp_data)
     plot_agent_pick_vs_win(adata)
     plot_agent_winrate_by_map(adata)
+
+    # Machine learning challenge: predict win rate from performance stats
+    player_ml = ml_players.merge_player_ml_data()
+    player_model, player_scaler = ml_players.player_ml_algorithm(player_ml)
+    print('The most effective player by our model should be:',
+          ml_players.predict_best_player(
+              player_ml, player_model, player_scaler))
+
+    agent_ml = ml_agents.merge_agent_ml_data()
+    agent_model, agent_scaler = ml_agents.agent_ml_algorithm(agent_ml)
+    print('The most effective agent by our model should be:',
+          ml_agents.predict_best_agent(
+              agent_ml, agent_model, agent_scaler))
 
 
 if __name__ == '__main__':
