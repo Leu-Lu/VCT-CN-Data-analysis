@@ -260,12 +260,14 @@ def main():
     # Machine learning challenge: predict win rate from performance stats
     player_ml = ml_players.merge_player_ml_data()
     player_model, player_scaler = ml_players.player_ml_algorithm(player_ml)
+    ml_players.plot_ml_predictions(player_ml, player_model, player_scaler)
     print('Top 5 players predicted by our model:')
     print(ml_players.predict_top_players(
         player_ml, player_model, player_scaler))
 
     agent_ml = ml_agents.merge_agent_ml_data()
     agent_model, agent_scaler = ml_agents.agent_ml_algorithm(agent_ml)
+    ml_agents.plot_ml_predictions(agent_ml, agent_model, agent_scaler)
     print('Top 5 agents predicted by our model:')
     print(ml_agents.predict_top_agents(
         agent_ml, agent_model, agent_scaler))

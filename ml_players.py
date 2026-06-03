@@ -9,6 +9,7 @@ machine learning model to predict player win rates from
 individual performance statistics.
 """
 import pandas as pd
+import matplotlib.pyplot as plt
 from sklearn.neural_network import MLPRegressor
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
@@ -75,6 +76,37 @@ def player_ml_algorithm(merged_data: pd.DataFrame) -> None:
     return model, scaler
 
 
+def plot_ml_predictions(data: pd.DataFrame, model, scaler) -> None:
+    """
+    Recreates the same train/test split used to fit the model and
+    plots predicted vs actual win rates, coloring training and test
+    points differently so over-fitting (train points hugging the
+    line, test points scattered) is visible.
+    """
+    features = data[['ACS', 'K/D', 'KAST%', 'ADR', 'KPR']]
+    labels = data['Win_Rate']
+    feat_train, feat_test, lab_train, lab_test = (
+        train_test_split(features, labels, test_size=0.2, random_state=1)
+    )
+
+    pred_train = model.predict(scaler.transform(feat_train))
+    pred_test = model.predict(scaler.transform(feat_test))
+
+    low = labels.min()
+    high = labels.max()
+
+    plt.figure(figsize=(8, 8))
+    plt.scatter(lab_train, pred_train, color='tab:blue', label='Train')
+    plt.scatter(lab_test, pred_test, color='tab:orange', label='Test')
+    plt.plot([low, high], [low, high], 'k--', label='Perfect Prediction')
+    plt.xlabel('Actual Win Rate')
+    plt.ylabel('Predicted Win Rate')
+    plt.title('Predicted vs Actual Win Rate - Players')
+    plt.legend()
+    plt.savefig('graphs/ml_player_predictions.png', bbox_inches='tight')
+    plt.clf()
+
+
 def predict_top_players(data: pd.DataFrame, model, scaler) -> list:
     """
     Predicts the win rate for every player using the trained model and
@@ -95,6 +127,7 @@ def main():
     """
     merged = merge_player_ml_data()
     model, scaler = player_ml_algorithm(merged)
+    plot_ml_predictions(merged, model, scaler)
     print('Top 5 players predicted by our model:')
     print(predict_top_players(merged, model, scaler))
 
