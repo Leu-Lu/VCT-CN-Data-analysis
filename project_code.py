@@ -14,20 +14,28 @@ import ml_players
 import ml_agents
 
 
-def acs_kast_seven_num_sum(data: pd.DataFrame) -> pd.DataFrame:
+def player_stats_seven_num_sum(data: pd.DataFrame) -> pd.DataFrame:
     """
-    Creates a seven-number summary for the ACS and KAST% variables from the
-    player performance data DataFrame.
+    Creates a seven-number summary for every numeric stat in the
+    player_agent data (ACS, K/D, KAST%, ADR, KPR).
     """
-    return data[['ACS', 'KAST%']].describe()
+    return data[['ACS', 'K/D', 'KAST%', 'ADR', 'KPR']].describe()
 
 
-def pick_win_seven_num_sum(data: pd.DataFrame) -> pd.DataFrame:
+def agent_pick_seven_num_sum(data: pd.DataFrame) -> pd.DataFrame:
     """
-    Creates a seven-number summary for the pickrate and winrate stats from
-    the agent pick data DataFrame.
+    Creates a seven-number summary for every numeric stat in the
+    agent pick data (pick rate and win rate).
     """
     return data[['pick%', 'win%']].describe()
+
+
+def round_win_seven_num_sum(data: pd.DataFrame) -> pd.DataFrame:
+    """
+    Creates a seven-number summary for every numeric stat in the player
+    round-win data (rounds won ,total rounds).
+    """
+    return data[['round_win', 'rnd']].describe()
 
 
 def calculate_player_acs() -> pd.DataFrame:
@@ -238,13 +246,15 @@ def main():
 
     teamcomps = pd.read_csv("datasets/Team comp wr.csv")
 
-    print(acs_kast_seven_num_sum(data).round(2))
-
     adata = pd.read_csv('datasets/agent_picks.csv')
     adata['pick%'] = adata['pick%'].apply(lambda x: float(x[:-1]))
     adata['win%'] = adata['win%'].apply(lambda x: float(x[:-1]))
 
-    print(pick_win_seven_num_sum(adata).round(2))
+    rnd_wins = pd.read_csv('datasets/player_rnd_wins.csv')
+
+    print(player_stats_seven_num_sum(data).round(2))
+    print(agent_pick_seven_num_sum(adata).round(2))
+    print(round_win_seven_num_sum(rnd_wins).round(2))
 
     player_data = calculate_player_acs()
     agent_data = calculate_agent_acs()

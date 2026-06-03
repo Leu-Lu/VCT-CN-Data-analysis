@@ -39,6 +39,7 @@ def merge_player_ml_data() -> pd.DataFrame:
     ).reset_index()
 
     wins = pd.read_csv('datasets/player_rnd_wins.csv')
+    wins.columns = ['Player', 'round_win', 'atk_win', 'def_win', 'rnd']
     wins['Win_Rate'] = wins['round_win'] / wins['rnd']
 
     merged = agg.merge(wins[['Player', 'Win_Rate']], on='Player')
