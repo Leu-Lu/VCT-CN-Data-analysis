@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 import ml_players
 import ml_agents
 
+
 def acs_kast_seven_num_sum(data: pd.DataFrame) -> pd.DataFrame:
     """
     Creates a seven-number summary for the ACS and KAST% variables from the
@@ -232,14 +233,13 @@ def main():
     various functions to make calculations and visualize various aspects
     of the data.
     """
-    
     data = pd.read_csv("datasets/player_agent.csv")
     data['KAST%'] = data['KAST%'].str.replace('%', '').astype(float)
-    
+
     teamcomps = pd.read_csv("datasets/Team comp wr.csv")
-    
+
     print(acs_kast_seven_num_sum(data).round(2))
-    
+
     adata = pd.read_csv('datasets/agent_picks.csv')
     adata['pick%'] = adata['pick%'].apply(lambda x: float(x[:-1]))
     adata['win%'] = adata['win%'].apply(lambda x: float(x[:-1]))
@@ -260,15 +260,15 @@ def main():
     # Machine learning challenge: predict win rate from performance stats
     player_ml = ml_players.merge_player_ml_data()
     player_model, player_scaler = ml_players.player_ml_algorithm(player_ml)
-    print('The most effective player by our model should be:',
-          ml_players.predict_best_player(
-              player_ml, player_model, player_scaler))
+    print('Top 5 players predicted by our model:')
+    print(ml_players.predict_top_players(
+        player_ml, player_model, player_scaler))
 
     agent_ml = ml_agents.merge_agent_ml_data()
     agent_model, agent_scaler = ml_agents.agent_ml_algorithm(agent_ml)
-    print('The most effective agent by our model should be:',
-          ml_agents.predict_best_agent(
-              agent_ml, agent_model, agent_scaler))
+    print('Top 5 agents predicted by our model:')
+    print(ml_agents.predict_top_agents(
+        agent_ml, agent_model, agent_scaler))
 
 
 if __name__ == '__main__':

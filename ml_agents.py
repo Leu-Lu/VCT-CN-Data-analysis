@@ -9,7 +9,6 @@ machine learning model to predict agents win rates from
 individual performance statistics.
 """
 import pandas as pd
-import matplotlib.pyplot as plt
 from sklearn.neural_network import MLPRegressor
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
@@ -17,9 +16,10 @@ from sklearn.model_selection import train_test_split
 
 def merge_agent_ml_data() -> pd.DataFrame:
     """
-    Reads player_agent.csv and player_winrate.csv, merges them
-    on the Player column, and returns a DataFrame with player
-    stats and win rate labels ready for machine learning.
+    Reads player_agent.csv, averages each agent's stats across all
+    players (weighted by rounds), and merges in each agent's overall
+    win rate from agent_picks.csv, returning a DataFrame ready for
+    machine learning.
     """
     agent_data = pd.read_csv('datasets/player_agent.csv')
     agent_data['KAST%'] = (
@@ -43,7 +43,13 @@ def merge_agent_ml_data() -> pd.DataFrame:
     merged = agg.merge(winrate_data, left_on='Agent', right_on='agent')
     return merged
 
+
 def agent_ml_algorithm(merged_data: pd.DataFrame) -> None:
+    """
+    Trains a neural network to predict an agent's win rate from its
+    average performance stats. Prints the test R^2 score and returns
+    the fitted model and the scaler used on the features.
+    """
     features = merged_data[['ACS', 'K/D', 'KAST%', 'ADR', 'KPR']]
     merged_data['win%'] = (
         merged_data['win%'].str.replace('%', '').astype(float)
@@ -72,17 +78,28 @@ def agent_ml_algorithm(merged_data: pd.DataFrame) -> None:
     return model, scaler
 
 
-def predict_best_agent(data: pd.DataFrame, model, scaler) -> str:
-    features = data[['ACS', 'K/D', 'KAST%', 'ADR', 'KPR']]
-    predicted = model.predict(scaler.transform(features))
-    return data.loc[predicted.argmax(), 'agent']
+def predict_top_agents(data: pd.DataFrame, model, scaler) -> list:
+    """
+    Predicts the win rate for every agent using the trained model and
+    returns the names of the five agents with the highest predicted
+    win rates.
+    """
+    result = data.copy()
+    features = result[['ACS', 'K/D', 'KAST%', 'ADR', 'KPR']]
+    result['Predicted'] = model.predict(scaler.transform(features))
+    result = result.sort_values('Predicted', ascending=False)
+    return list(result['agent'].head(5))
 
 
 def main():
+    """
+    Builds the agent dataset, trains the model, and prints the five
+    agents with the highest predicted win rates.
+    """
     merged = merge_agent_ml_data()
     model, scaler = agent_ml_algorithm(merged)
-    #plot_ml_predictions(merged, model, scaler)
-    print('The most effective agent predicted by our model should be: ', predict_best_agent(merged, model, scaler))
+    print('Top 5 agents predicted by our model:')
+    print(predict_top_agents(merged, model, scaler))
 
 
 if __name__ == '__main__':
