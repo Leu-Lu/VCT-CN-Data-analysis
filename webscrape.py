@@ -22,22 +22,24 @@ data = {}
 for match_id in matches_series:
     for map in matches_series[match_id]:
         teams = map.teams
-        #print(teams)
-        for team in teams:
+        for round in map.rounds:
             for player in map.players:
-                if player.team_id == team.id:
-                    #print(f"{player.name} is in {team.name}")
-                    if player.name in data:
-                        data[player.name]['round_win'] += team.score
-                        data[player.name]['atk_win'] += team.attacker_rounds
-                        data[player.name]['def_win'] += team.defender_rounds
-                        data[player.name]['rnd'] += 13
-                    else:
-                        data[player.name] = {
-                            'round_win':team.score,
-                            'atk_win':team.attacker_rounds,
-                            'def_win':team.defender_rounds,
-                            'rnd':13}
+                if player.name not in data:
+                    data[player.name] = {
+                        'round_win':0,
+                        'atk_win':0,
+                        'def_win':0,
+                        'rnd':0
+                    }
+                for team in teams:
+                    if round.winner_team_id == team.id:
+                        if player.team_id == team.id:
+                            if round.winner_side == 'Attacker':
+                                data[player.name]['atk_win'] += 1
+                            else:
+                                data[player.name]['def_win'] += 1
+                            data[player.name]['round_win'] += 1
+                data[player.name]['rnd'] += 1
 
 print(data)
 
