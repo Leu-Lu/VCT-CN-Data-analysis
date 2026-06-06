@@ -53,7 +53,7 @@ def calculate_player_acs() -> pd.DataFrame:
     player_data = (
         by_player.apply(lambda x: (x['Rnd'] * x['ACS']).sum() / x['Rnd'].sum())
         .round(2)
-        .reset_index()
+        .reset_index(name='ACS')
     )
 
     return player_data
@@ -100,7 +100,6 @@ def plot_players_acs(player_data: pd.DataFrame) -> None:
     Creates a barplot displaying every player's ACS based on the player
     performance DataFrame passed in.
     """
-    player_data = player_data.rename(columns={0: 'ACS'})
     players = player_data.sort_values('ACS', ascending=False)
 
     plt.figure(figsize=(12, 30))
@@ -110,6 +109,21 @@ def plot_players_acs(player_data: pd.DataFrame) -> None:
     plt.ylabel('Player')
     plt.tight_layout()
     plt.savefig('graphs/players_acs.png', bbox_inches='tight')
+
+
+def plot_top5_player_acs(player_data: pd.DataFrame) -> None:
+    """
+    Creates a barplot of the five players with the highest weighted ACS.
+    """
+    top5 = player_data.sort_values('ACS', ascending=False).head(5)
+
+    plt.figure(figsize=(8, 6))
+    sns.barplot(data=top5, x='ACS', y='Player')
+    plt.title("Top 5 Players by ACS")
+    plt.xlabel('ACS (Average Combat Score)')
+    plt.ylabel('Player')
+    plt.tight_layout()
+    plt.savefig('graphs/top5_player_acs.png', bbox_inches='tight')
 
 
 def plot_acs_by_agent(data: pd.DataFrame, agent_data: pd.DataFrame) -> None:
@@ -233,55 +247,3 @@ def plot_agent_winrate_by_map(adata: pd.DataFrame) -> None:
     )
     plt.title("Agent Win% by Map")
     plt.savefig('graphs/agent_winrate_by_map.png', bbox_inches='tight')
-
-
-def main():
-    """
-    Imports data from the CSV files containing Valorant match data and uses
-    various functions to make calculations and visualize various aspects
-    of the data.
-    """
-    data = pd.read_csv("datasets/player_agent.csv")
-    data['KAST%'] = data['KAST%'].str.replace('%', '').astype(float)
-
-    teamcomps = pd.read_csv("datasets/Team comp wr.csv")
-
-    adata = pd.read_csv('datasets/agent_picks.csv')
-    adata['pick%'] = adata['pick%'].apply(lambda x: float(x[:-1]))
-    adata['win%'] = adata['win%'].apply(lambda x: float(x[:-1]))
-
-    rnd_wins = pd.read_csv('datasets/player_rnd_wins.csv')
-
-    print(player_stats_seven_num_sum(data).round(2))
-    print(agent_pick_seven_num_sum(adata).round(2))
-    print(round_win_seven_num_sum(rnd_wins).round(2))
-
-    player_data = calculate_player_acs()
-    agent_data = calculate_agent_acs()
-    comp_data = calculate_comp_popularity_winrate()
-    plot_players_acs(player_data)
-    plot_acs_by_agent(data, agent_data)
-    plot_kast_by_agent(data, agent_data)
-    plot_team_comp_heatmap(teamcomps)
-    plot_team_wins_vs_losses(comp_data)
-    plot_agent_pick_vs_win(adata)
-    plot_agent_winrate_by_map(adata)
-
-    # Machine learning challenge: predict win rate from performance stats
-    player_ml = ml_players.merge_player_ml_data()
-    player_model, player_scaler = ml_players.player_ml_algorithm(player_ml)
-    ml_players.plot_ml_predictions(player_ml, player_model, player_scaler)
-    print('Top 5 players predicted by our model:')
-    print(ml_players.predict_top_players(
-        player_ml, player_model, player_scaler))
-
-    agent_ml = ml_agents.merge_agent_ml_data()
-    agent_model, agent_scaler = ml_agents.agent_ml_algorithm(agent_ml)
-    ml_agents.plot_ml_predictions(agent_ml, agent_model, agent_scaler)
-    print('Top 5 agents predicted by our model:')
-    print(ml_agents.predict_top_agents(
-        agent_ml, agent_model, agent_scaler))
-
-
-if __name__ == '__main__':
-    main()

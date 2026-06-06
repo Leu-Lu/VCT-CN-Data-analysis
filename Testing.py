@@ -14,10 +14,10 @@ import numpy as np
 
 def player_acs_test():
     player_data = project_code.calculate_player_acs()
-    stew_acs = player_data.loc[player_data['Player'] == 'stew', 0]
-    zmjjkk_acs = player_data.loc[player_data['Player'] == 'ZmjjKK', 0]
-    wsLeo_acs = player_data.loc[player_data['Player'] == 'WsLeo', 0]
-    siufat_acs = player_data.loc[player_data['Player'] == 'SiuFatBB', 0]
+    stew_acs = player_data.loc[player_data['Player'] == 'stew', 'ACS']
+    zmjjkk_acs = player_data.loc[player_data['Player'] == 'ZmjjKK', 'ACS']
+    wsLeo_acs = player_data.loc[player_data['Player'] == 'WsLeo', 'ACS']
+    siufat_acs = player_data.loc[player_data['Player'] == 'SiuFatBB', 'ACS']
     assert np.isclose(stew_acs, 212.95)
     assert np.isclose(zmjjkk_acs, 238.91)
     assert np.isclose(wsLeo_acs, 185.55)
@@ -38,10 +38,10 @@ def agent_acs_test() -> None:
 
 def comp_popularity_winrate_test() -> None:
     comp_data = project_code.calculate_comp_popularity_winrate()
-    dd_games = comp_data.loc[comp_data['Winner'] == 'Double Duelist', 
+    dd_games = comp_data.loc[comp_data['Winner'] == 'Double Duelist',
                              'Total Games']
     dd_wr = comp_data.loc[comp_data['Winner'] == 'Double Duelist', 'Win Rate']
-    ds_games = comp_data.loc[comp_data['Winner'] == 'Double Smokes', 
+    ds_games = comp_data.loc[comp_data['Winner'] == 'Double Smokes',
                              'Total Games']
     ds_wr = comp_data.loc[comp_data['Winner'] == 'Double Smokes', 'Win Rate']
     ddi_wr = comp_data.loc[comp_data['Winner'] == 'DD+DI', 'Win Rate']

@@ -93,19 +93,17 @@ def plot_ml_predictions(data: pd.DataFrame, model, scaler) -> None:
     pred_train = model.predict(scaler.transform(feat_train))
     pred_test = model.predict(scaler.transform(feat_test))
 
-    low = labels.min()
-    high = labels.max()
-
     plt.figure(figsize=(8, 8))
     plt.scatter(lab_train, pred_train, color='tab:blue', label='Train')
     plt.scatter(lab_test, pred_test, color='tab:orange', label='Test')
-    plt.plot([low, high], [low, high], 'k--', label='Perfect Prediction')
+    plt.plot([0, 1], [0, 1], 'k--', label='Perfect Prediction')
+    plt.xlim(0, 1)
+    plt.ylim(0, 1)
     plt.xlabel('Actual Win Rate')
     plt.ylabel('Predicted Win Rate')
     plt.title('Predicted vs Actual Win Rate - Players')
     plt.legend()
     plt.savefig('graphs/ml_player_predictions.png', bbox_inches='tight')
-    plt.clf()
 
 
 def predict_top_players(data: pd.DataFrame, model, scaler) -> list:
@@ -119,19 +117,3 @@ def predict_top_players(data: pd.DataFrame, model, scaler) -> list:
     result['Predicted'] = model.predict(scaler.transform(features))
     result = result.sort_values('Predicted', ascending=False)
     return list(result['Player'].head(5))
-
-
-def main():
-    """
-    Builds the player dataset, trains the model, and prints the five
-    players with the highest predicted win rates.
-    """
-    merged = merge_player_ml_data()
-    model, scaler = player_ml_algorithm(merged)
-    plot_ml_predictions(merged, model, scaler)
-    print('Top 5 players predicted by our model:')
-    print(predict_top_players(merged, model, scaler))
-
-
-if __name__ == '__main__':
-    main()
