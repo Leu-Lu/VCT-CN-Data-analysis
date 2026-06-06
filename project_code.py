@@ -10,8 +10,6 @@ as well as constructing our data visualizations.
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-import ml_players
-import ml_agents
 
 
 def player_stats_seven_num_sum(data: pd.DataFrame) -> pd.DataFrame:
