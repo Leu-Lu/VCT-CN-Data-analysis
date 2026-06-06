@@ -24,6 +24,7 @@ for match_id in matches_series:
     for map in matches_series[match_id]:
         teams = map.teams
         for round in map.rounds:
+        for round in map.rounds:
             for player in map.players:
                 if player.name not in data:
                     data[player.name] = {
