@@ -5,6 +5,7 @@ This project performs data analysis on VCT CN players and agents, covering data 
 - `ml_players.py` contains the code for training a model to predict the win-rates of players, and plots the accuracy of our model on a graph.
 - `main.py` calls for the methods defined in `project_code.py`, `ml_agents.py`, and `ml_players.py`.
 - `Testing.py` is used for code testing
+- `webscrape.py` contains the code for pulling data from vlr.gg and packaging them into `player_rnd_wins.csv`.
 
 
 To run this program, ensure that the datasets are in the same directory as the python files, in a folder labeled `datasets`.
